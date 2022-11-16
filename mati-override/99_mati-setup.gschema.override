@@ -1,0 +1,6 @@
+[org.mate.panel]
+default-layout='mati'
+
+[org.mate.background]
+picture-filename='/usr/share/backgrounds/mate/desktop/Astronaut.jpg'
+picture-options='zoom'

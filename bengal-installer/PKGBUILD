@@ -1,6 +1,6 @@
 pkgname=bengal-installer
 pkgver=1
-pkgrel=3
+pkgrel=4
 pkgdesc='BengalBoot and all others distro from Bengal OS Installer'
 arch=('i686' 'x86_64')
 license=(GPL)
@@ -15,8 +15,8 @@ backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/initcpio.conf'
         'usr/share/calamares/modules/unpackfs.conf')
 
-source+=(git+https://github.com/BCW52/bengal-installer)
-sha256sums=('7d95bfc386acb31bad4706b82931e157c13cc68fa1473d89ebe67ad4d27384a7')
+source+=("file:///home/bengal/Project/bengal-installer-1.4.zip")
+sha256sums=('e66c55d924f59e32798079d70796dfc474b3139bd2eff0540c439611a0b6f0f9')
 
 prepare() {
 
@@ -31,7 +31,7 @@ prepare() {
 }
 
 build() {
-    cd $srcdir/${pkgname}-${pkgver}.${pkgrel}
+cd $srcdir/${pkgname}-${pkgver}.${pkgrel}
     mkdir -p build
     cd build
     cmake .. \
@@ -40,7 +40,7 @@ build() {
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DWITH_PYTHONQT:BOOL=ON \
     -DBoost_NO_BOOST_CMAKE=ON \
-    -DSKIP_MODULES=" initramfs initramfscfg dracut dracutlukscfg \ 
+    -DSKIP_MODULES=" initramfscfg dracut dracutlukscfg \
     dummycpp dummyprocess dummypython dummypythonqt \
     finishedq keyboardq license localeq notesqml oemid \
     openrcdmcryptcfg packagechooserq \
@@ -51,7 +51,7 @@ build() {
     make -j4 install
 }
 package() {
-    	cd $srcdir/${pkgname}-${pkgver}.${pkgrel}/build
+cd $srcdir/${pkgname}-${pkgver}.${pkgrel}/build
 	make DESTDIR="$pkgdir" install
 	install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/bengal-installer.svg"
 	install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
