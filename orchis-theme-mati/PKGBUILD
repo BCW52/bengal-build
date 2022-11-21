@@ -1,0 +1,22 @@
+# Maintainer: Alan Sartorio
+
+pkgname=orchis-theme-mati
+pkgver=2022_10_19
+pkgrel=1
+pkgdesc="A Material Design theme for GNOME/GTK based desktop environments."
+options=(!strip)
+replaces=("${pkgname}-bin")
+arch=('any')
+conflicts=("${pkgname}")
+url="https://github.com/vinceliuice/${pkgname}"
+groups=('mati')
+source=("file:///home/bengal/.cache/yay/orchis-theme/Orchis.zip")
+sha256sums=('52b4b2bc7da072f83caaa0c4e6bd8b739d52d065d310bfe48a0b63ab2778b012')
+license=('GPL3')
+
+
+package() {
+	target=$pkgdir/usr/share/themes/
+	mkdir -p $target
+	cp -r $srcdir/Orchis/* $target/
+}

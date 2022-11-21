@@ -15,23 +15,23 @@ backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/initcpio.conf'
         'usr/share/calamares/modules/unpackfs.conf')
 
-source+=("file:///home/bengal/Project/bengal-installer-1.4.zip")
-sha256sums=('e66c55d924f59e32798079d70796dfc474b3139bd2eff0540c439611a0b6f0f9')
+source+=("git+https://github.com/BCW52/bengal-installer")
+sha256sums=('SKIP')
 
 prepare() {
 
-    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}-${pkgver}.${pkgrel}/CMakeLists.txt"
-    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${pkgname}-${pkgver}.${pkgrel}/CMakeLists.txt"
-    sed -i -e 's/etc\/sddm.conf/etc\/sddm.conf.d\/kde_settings.conf/' "$srcdir/${pkgname}-${pkgver}.${pkgrel}/src/modules/displaymanager/main.py"
+    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}/CMakeLists.txt"
+    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${pkgname}/CMakeLists.txt"
+    sed -i -e 's/etc\/sddm.conf/etc\/sddm.conf.d\/kde_settings.conf/' "$srcdir/${pkgname}/src/modules/displaymanager/main.py"
 
     # add pkgrelease to patch-version
-    cd ${pkgname}-${pkgver}.${pkgrel}
+    cd ${pkgname}
     _patchver="$(cat CMakeLists.txt | grep -m3 -e CALAMARES_VERSION_PATCH | grep -o "[[:digit:]]*" | xargs)"
     sed -i -e "s|CALAMARES_VERSION_PATCH $_patchver|CALAMARES_VERSION_PATCH $_patchver-$pkgrel|g" CMakeLists.txt
 }
 
 build() {
-cd $srcdir/${pkgname}-${pkgver}.${pkgrel}
+cd $srcdir/${pkgname}
     mkdir -p build
     cd build
     cmake .. \
@@ -51,12 +51,12 @@ cd $srcdir/${pkgname}-${pkgver}.${pkgrel}
     make -j4 install
 }
 package() {
-cd $srcdir/${pkgname}-${pkgver}.${pkgrel}/build
-	make DESTDIR="$pkgdir" install
-	install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/bengal-installer.svg"
-	install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
-	install -Dm644 "../data/installer.desktop" "$pkgdir/usr/share/applications/installer.desktop"
-	install -Dm755 "../data/bengal_polkit" "$pkgdir/usr/bin/bengal_polkit"
-	install -Dm644 "../data/49-nopasswd-calamares.rules" "$pkgdir/etc/polkit-1/rules.d/49-nopasswd-calamares.rules"
-	chmod 750      "$pkgdir"/etc/polkit-1/rules.d
+cd $srcdir/${pkgname}/build
+    make DESTDIR="$pkgdir" install
+    install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/bengal-installer.svg"
+    install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
+    install -Dm644 "../data/installer.desktop" "$pkgdir/usr/share/applications/installer.desktop"
+    install -Dm755 "../data/bengal_polkit" "$pkgdir/usr/bin/bengal_polkit"
+    install -Dm644 "../data/49-nopasswd-calamares.rules" "$pkgdir/etc/polkit-1/rules.d/49-nopasswd-calamares.rules"
+    chmod 750      "$pkgdir"/etc/polkit-1/rules.d
 }

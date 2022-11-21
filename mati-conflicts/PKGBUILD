@@ -1,0 +1,18 @@
+pkgname=mati-conflicts
+pkgver=1.1
+pkgrel=1
+pkgdesc="MATE settings for Mati"
+arch=('any')
+groups=('mati')
+license=('GPL')
+source=('99_mati-setup.gschema.override'
+        'mati.layout')
+sha256sums=('160a15bf199b765757480b7a9e3ea14bb036113fcb40a82386267f9ced72def9'
+            '65ff5ef067ce69804afbff708e2956c64ed5bb83e4c03af577d85fea88013d3a')
+
+package() {
+    PREFIX=/usr/local/bin
+    cd "$_pkgname"
+    install -Dm755 "${srcdir}/99_mati-setup.gschema.override" "${pkgdir}/usr/share/glib-2.0/schemas/99_mati-setup.gschema.override"
+    install -Dm755 "${srcdir}/mati.layout" "${pkgdir}/usr/share/mate-panel/layouts/mati.layout"
+}

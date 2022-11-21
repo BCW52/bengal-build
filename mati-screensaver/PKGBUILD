@@ -1,0 +1,37 @@
+# Maintainer: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mati-screensaver
+pkgver=1.26.1
+pkgrel=1
+pkgdesc='Screensaver for MATE'
+url="https://mate-desktop.org"
+arch=('x86_64')
+license=('GPL')
+depends=('libmatekbd' 'gettext' 'libnotify' 'libxss' 'mati-desktop' 'mati-menus' 'mati-session-manager')
+makedepends=('systemd')
+groups=('mati')
+conflicts=('mate-screensaver-gtk3' 'mate-screensaver')
+replaces=('mate-screensaver-gtk3')
+source=("https://pub.mate-desktop.org/releases/1.26/mate-screensaver-1.26.1.tar.xz")
+sha256sums=('4fbdb21ea4a59ea8de33ea9bf776d869753e49295604664c30e220e09659b8bc')
+
+build() {
+	cd mate-screensaver-1.26.1
+    	./configure \
+        	--prefix=/usr \
+        	--libexecdir=/usr/lib/${pkgname} \
+        	--sysconfdir=/etc \
+        	--with-xscreensaverdir=/usr/share/xscreensaver/config \
+        	--with-xscreensaverhackdir=/usr/lib/xscreensaver \
+        	--with-mit-ext \
+        	--with-libnotify \
+        	--enable-locking \
+        	--without-console-kit
+    	make
+}
+
+package() {
+		cd mate-screensaver-1.26.1
+    	make DESTDIR="${pkgdir}" install
+}

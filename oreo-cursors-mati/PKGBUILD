@@ -1,0 +1,36 @@
+# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+pkgname=oreo-cursors-mati
+pkgver=1
+pkgrel=1
+pkgdesc="Color material cursors with cute animations."
+arch=('any')
+url="https://www.pling.com/p/1360254"
+license=('GPL2')
+makedepends=('git' 'ruby' 'gtk-engine-murrine' 'inkscape' 'libcanberra'
+             'xorg-xcursorgen')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+options=('!strip')
+groups=('mati')
+source=('file:///home/bengal/Project/oreo-cursors-git.zip')
+sha256sums=('2c24294f845f5a9b53be91b73df4f7fe82a108a64a2af6ba818d871fd29370f7')
+prepare() {
+  cd "$srcdir/${pkgname%-mati}"
+  make clean
+}
+
+build() {
+  cd "$srcdir/${pkgname%-mati}"
+  export NO_AT_BRIDGE=1
+
+  pushd generator
+  ruby convert.rb
+  popd
+
+  make build
+}
+
+package() {
+  cd "$srcdir/${pkgname%-mati}"
+  make DESTDIR="$pkgdir" install
+}
