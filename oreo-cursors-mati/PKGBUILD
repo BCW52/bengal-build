@@ -12,22 +12,12 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 options=('!strip')
 groups=('mati')
-source=('file:///home/bengal/Project/oreo-cursors-git.zip')
-sha256sums=('2c24294f845f5a9b53be91b73df4f7fe82a108a64a2af6ba818d871fd29370f7')
-prepare() {
-  cd "$srcdir/${pkgname%-mati}"
-  make clean
-}
-
+source=('file:///home/harry/Documents/oreo-cursors.zip')
+sha256sums=('3e1b8d3debd3eb88acaf408c9bcce0885fc4b65ca223f2b5bb4a44da0bb787d5')
 build() {
   cd "$srcdir/${pkgname%-mati}"
-  export NO_AT_BRIDGE=1
-
-  pushd generator
-  ruby convert.rb
-  popd
-
-  make build
+ruby generator/convert.rb
+make build
 }
 
 package() {

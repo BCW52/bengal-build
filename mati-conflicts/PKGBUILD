@@ -1,18 +1,29 @@
 pkgname=mati-conflicts
-pkgver=1.1
+pkgver=1.2
 pkgrel=1
 pkgdesc="MATE settings for Mati"
 arch=('any')
 groups=('mati')
 license=('GPL')
 source=('99_mati-setup.gschema.override'
-        'mati.layout')
+        'mati.layout'
+        'mati'
+        'mati-setup.desktop'
+        'mati-setup')
 sha256sums=('160a15bf199b765757480b7a9e3ea14bb036113fcb40a82386267f9ced72def9'
-            '65ff5ef067ce69804afbff708e2956c64ed5bb83e4c03af577d85fea88013d3a')
-
+            '966a0d99a0386e60aecaf61790225a74b4bae0d81a3a4f6eb794326d684d291d'
+            '4115781ff4dcf96b8969d90caae6cf1ebd9d48b6518f968af578b591965d412c'
+            '7609116507580768274507c62a867921a2ce746514877068fb807349e4a578a6'
+            '5c093509d1a3142566ef03731a8eb795cae56bbda9a6514154d1997a9b4c043b')
+groups=('mati')
 package() {
-    PREFIX=/usr/local/bin
+    PREFIX=/etc/skel
+    BDIR=/usr/local/bin
     cd "$_pkgname"
+    mkdir -p $pkgdir/usr/share/layout/
+    cp "${srcdir}/mati" "${pkgdir}/usr/share/layout/mati"
     install -Dm755 "${srcdir}/99_mati-setup.gschema.override" "${pkgdir}/usr/share/glib-2.0/schemas/99_mati-setup.gschema.override"
     install -Dm755 "${srcdir}/mati.layout" "${pkgdir}/usr/share/mate-panel/layouts/mati.layout"
+    install -Dm755 "${srcdir}/mati-setup" "${pkgdir}${BDIR}/mati-setup"
+    install -Dm644 "${srcdir}/mati-setup.desktop" "${pkgdir}${PREFIX}/.config/autostart/mati-setup.desktop"
 }

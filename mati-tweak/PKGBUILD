@@ -1,0 +1,31 @@
+pkgname=mati-tweak
+pkgver=22.10.0
+_umsver=22.10.2
+pkgrel=3
+pkgdesc="Tweak tool for MATE (fork of MintDesktop)"
+arch=('any')
+url="https://github.com/ubuntu-mate/mate-tweak"
+license=('GPL')
+depends=('gtk3' 'libnotify' 'mati-applets' 'python-configobj' 'python-distro' 'python-gobject' 'python-psutil' 'python-setproctitle')
+makedepends=('python-distutils-extra' 'python-setuptools')
+optdepends=('brisk-menu: for Manjaro panel layout'
+            'mati-applet-dock: for Mutiny panel layout'
+            'mati-menu: to enable advanced menu'
+            'mati-applets-netbook: for Netbook panel layout'
+            'plank: for Cupertino panel layout'
+            'synapse: to enable launcher'
+            'tilda: to enable pull-down terminal'
+            'topmenu-gtk: for Mutiny panel layout'
+            'vala-panel-appmenu-mate: for Mutiny,Cupertino')
+source=("https://github.com/ubuntu-mate/mate-tweak/archive/refs/tags/22.10.0.tar.gz")
+sha256sums=('c33c092b0151b50d8a5706825f1bcef57f1738f8f5cf22af49c11f45bc14e84a')
+
+prepare() {
+  cd "mate-tweak-${pkgver}"
+  sed -i 's|/usr/lib/mate-applets/topmenu-mate-panel-applet|/usr/lib/topmenu-gtk/topmenu-mate-panel-applet|' mate-tweak
+}
+
+package() {
+  cd "mate-tweak-$pkgver"
+  python setup.py install --root="$pkgdir" --optimize=1
+}

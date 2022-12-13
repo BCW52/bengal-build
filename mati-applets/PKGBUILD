@@ -1,0 +1,36 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mati-applets
+pkgver=1
+pkgrel=1
+pkgdesc="Applets for MATI panel"
+arch=('x86_64')
+url="https://mate-desktop.org"
+license=('GPL')
+depends=('cpupower' 'gtksourceview3' 'libgtop' 'libnotify' 'mati-panel' 'polkit' 'upower' 'wireless_tools')
+makedepends=('intltool' 'itstool' 'gucharmap' 'yelp-tools')
+optdepends=('fortune-mod: for displaying fortune cookies in the Wanda the Fish applet' 'gucharmap: character picker applet')
+groups=('mati')
+conflicts=('mate-applets-gtk3' 'mate-netspeed' 'mate-netspeed-gtk3' 'mate-applets')
+replaces=('mate-applets-gtk3' 'mate-netspeed' 'mate-netspeed-gtk3' 'mate-applets')
+source=("https://pub.mate-desktop.org/releases/1.26/mate-applets-1.26.1.tar.xz")
+sha256sums=('3ab8f61db376dc333ce4c18722c63a07fab3e8e1272b7e0e097ad4597b17c2c2')
+
+build() {
+    	cd "mate-applets-1.26.1"
+    	./configure \
+        	--prefix=/usr \
+        	--sysconfdir=/etc \
+        	--libexecdir=/usr/lib/mate-applets \
+        	--with-dbus-sys="/usr/share/dbus-1/system.d" \
+        	--enable-polkit \
+        	--enable-ipv6
+    	make
+}
+
+package() {
+    	cd "mate-applets-1.26.1"
+    	make DESTDIR="${pkgdir}" install
+}

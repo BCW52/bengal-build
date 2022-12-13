@@ -1,0 +1,31 @@
+pkgname=mati-desktop
+pkgver=1
+pkgrel=1
+pkgdesc="Library with common API for various MATE modules"
+url="https://github.com/BCW52"
+arch=('x86_64')
+license=('GPL' 'LGPL')
+depends=('gtk3' 'startup-notification' 'iso-codes')
+makedepends=('gobject-introspection' 'intltool')
+groups=('mati')
+conflicts=('mate-desktop-gtk3' 'mate-desktop-schemas' 'mate-desktop')
+source=("git+https://github.com/BCW52/mati-desktop")
+sha256sums=('SKIP')
+
+build() {
+	cd "$pkgname"
+    	./configure \
+        	--prefix=/usr \
+        	--disable-schemas-compile
+
+    	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+    	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
+    	make
+}
+
+package() {
+    	cd "$pkgname"
+
+    	make DESTDIR="${pkgdir}" install
+}

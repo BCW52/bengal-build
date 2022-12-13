@@ -10,13 +10,13 @@ arch=('any')
 conflicts=("${pkgname}")
 url="https://github.com/vinceliuice/${pkgname}"
 groups=('mati')
-source=("file:///home/bengal/.cache/yay/orchis-theme/Orchis.zip")
-sha256sums=('52b4b2bc7da072f83caaa0c4e6bd8b739d52d065d310bfe48a0b63ab2778b012')
+source=("git+https://github.com/BCW52/Orchis-theme-mati/")
+sha256sums=('SKIP')
 license=('GPL3')
 
 
 package() {
 	target=$pkgdir/usr/share/themes/
 	mkdir -p $target
-	cp -r $srcdir/Orchis/* $target/
+	cp -r $srcdir/Orchis-theme-mati/* $target/
 }

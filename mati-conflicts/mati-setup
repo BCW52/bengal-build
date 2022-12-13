@@ -1,0 +1,4 @@
+#!/bin/bash
+
+dconf load /org/mate/panel/ < /usr/share/layout/mati
+rm ~/.config/autostart/mati-setup.desktop

@@ -15,48 +15,47 @@ backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/initcpio.conf'
         'usr/share/calamares/modules/unpackfs.conf')
 
-source+=("git+https://github.com/BCW52/bengal-installer")
-sha256sums=('SKIP')
+source+=("file:///home/bengal/bengal-installer-1.4.tar.gz")
+sha256sums=('4cba0f39027bccbe723c5719c0d0ce13717a43ac362389924e24b281823f1583')
 
 prepare() {
 
-    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}/CMakeLists.txt"
-    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${pkgname}/CMakeLists.txt"
-    sed -i -e 's/etc\/sddm.conf/etc\/sddm.conf.d\/kde_settings.conf/' "$srcdir/${pkgname}/src/modules/displaymanager/main.py"
-
-    # add pkgrelease to patch-version
-    cd ${pkgname}
+    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}-${pkgver}.$pkgrel/CMakeLists.txt"
+    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${pkgname}-${pkgver}.$pkgrel/CMakeLists.txt"
+    cd ${srcdir}/$pkgname-${pkgver}.$pkgrel
     _patchver="$(cat CMakeLists.txt | grep -m3 -e CALAMARES_VERSION_PATCH | grep -o "[[:digit:]]*" | xargs)"
     sed -i -e "s|CALAMARES_VERSION_PATCH $_patchver|CALAMARES_VERSION_PATCH $_patchver-$pkgrel|g" CMakeLists.txt
+    sed -i -e 's|"$@"|"-D6" "$@"|g' data/bengal_polkit
 }
 
+
 build() {
-cd $srcdir/${pkgname}
+    cd ${srcdir}/$pkgname-${pkgver}.$pkgrel
     mkdir -p build
     cd build
-    cmake .. \
--DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DWITH_PYTHONQT:BOOL=ON \
-    -DBoost_NO_BOOST_CMAKE=ON \
-    -DSKIP_MODULES=" initramfscfg dracut dracutlukscfg \
-    dummycpp dummyprocess dummypython dummypythonqt \
-    finishedq keyboardq license localeq notesqml oemid \
-    openrcdmcryptcfg packagechooserq \
-    plymouthcfg plasmalnf services-openrc \
-    summaryq tracking usersq webview welcomeq zfs"
-    export DESTDIR="$srcdir/${pkgname}-${pkgver}.${pkgrel}/build/$pkgname"
-    make
-    make -j4 install
+        cmake .. \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_INSTALL_PREFIX=/usr \
+              -DCMAKE_INSTALL_LIBDIR=lib \
+              -DWITH_KF5DBus=OFF \
+              -DBoost_NO_BOOST_CMAKE=ON \
+              -DSKIP_MODULES="initramfs initramfscfg \
+                              dummyprocess dummypython \
+                              dummycpp dummypythonqt \
+                              services-openrc"
+        make
 }
 package() {
-cd $srcdir/${pkgname}/build
+cd $srcdir/$pkgname-${pkgver}.$pkgrel/build
     make DESTDIR="$pkgdir" install
     install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/bengal-installer.svg"
     install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
-    install -Dm644 "../data/installer.desktop" "$pkgdir/usr/share/applications/installer.desktop"
     install -Dm755 "../data/bengal_polkit" "$pkgdir/usr/bin/bengal_polkit"
     install -Dm644 "../data/49-nopasswd-calamares.rules" "$pkgdir/etc/polkit-1/rules.d/49-nopasswd-calamares.rules"
     chmod 750      "$pkgdir"/etc/polkit-1/rules.d
+    mv "$pkgdir/usr/lib/calamares/modules/services-systemd" "$pkgdir/usr/lib/calamares/modules/services"
+    mv "$pkgdir/usr/share/calamares/modules/services-systemd.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
+    sed -i -e 's/-systemd//' "$pkgdir/usr/lib/calamares/modules/services/module.desc"
+    sed -i -e 's/-systemd//' "$pkgdir/usr/share/calamares/settings.conf"
+
 }

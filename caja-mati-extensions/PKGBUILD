@@ -12,6 +12,7 @@ arch=('x86_64')
 license=('GPL')
 depends=('caja-mati' 'gettext' 'dbus-glib' 'imagemagick')
 makedepends=('python')
+groups=('mati')
 source=("https://pub.mate-desktop.org/releases/1.26/caja-extensions-1.26.1.tar.xz")
 sha256sums=('589c19e3fa10242d6239a5ccb9585598436a56ebe94d2eb2a50b5950cce1d520')
 

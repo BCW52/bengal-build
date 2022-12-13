@@ -1,59 +1,120 @@
-[Toplevel top]
-expand=true
-orientation=top
-size=24
+[general]
+default-layout='mati'
+object-id-list=['chrome', 'menu', 'caja', 'clock', 'vlc', 'window-list', 'workspace-switcher', 'mate-terminal', 'notification-area', 'vscode', 'netspeed']
+toplevel-id-list=['bottom']
 
 [Toplevel bottom]
 expand=true
-orientation=bottom
-size=24
+orientation='bottom'
+size=31
 
-[Object menu-bar]
-object-type=menu-bar
-toplevel-id=top
-position=0
+[Toplevel bottom/background]
+color='rgba(7, 15, 43, 0.8)'
+type=color
+
+[Objects menu]
 locked=true
-
-[Object mate-terminal]
-launcher-location=/usr/share/applications/mate-terminal.desktop
-object-type=launcher
+applet-iid=BriskMenuFactory::BriskMenu
+object-type=applet
 panel-right-stick=false
 position=0
-toplevel-id=top
-
-[Object firefox]
-launcher-location=/usr/share/applications/firefox.desktop
-object-type=launcher
-panel-right-stick=false
-position=0
-toplevel-id=top
-
-[Object notification-area]
-object-type=applet
-applet-iid=NotificationAreaAppletFactory::NotificationArea
-toplevel-id=top
-position=10
-panel-right-stick=true
-locked=true
-
-[Object clock]
-object-type=applet
-applet-iid=ClockAppletFactory::ClockApplet
-toplevel-id=top
-position=0
-panel-right-stick=true
-locked=true
-
-[Object show-desktop]
-object-type=applet
-applet-iid=WnckletFactory::ShowDesktopApplet
 toplevel-id=bottom
-position=0
-locked=true
 
-[Object window-list]
-object-type=applet
+[Objects caja-browser]
+launcher-location=/usr/share/applications/caja-browser.desktop
+locked=true
+object-type=launcher
+panel-right-stick=false
+position=34
+toplevel-id=bottom
+
+[Objects window-list]
 applet-iid=WnckletFactory::WindowListApplet
-toplevel-id=bottom
-position=20
 locked=true
+object-type=applet
+panel-right-stick=false
+position=191
+toplevel-id=bottom
+
+[Objects chrome]
+launcher-location=google-chrome.desktop
+locked=true
+object-type=launcher
+panel-right-stick=false
+position=129
+toplevel-id=bottom
+
+[Objects vlc]
+launcher-location=/usr/share/applications/vlc.desktop
+locked=true
+object-type=launcher
+panel-right-stick=false
+position=65
+toplevel-id=bottom
+
+[Objects mate-terminal]
+launcher-location=/usr/share/applications/mate-terminal.desktop
+locked=true
+object-type=launcher
+panel-right-stick=false
+position=96
+toplevel-id=bottom
+
+[Objects notification-area]
+applet-iid=NotificationAreaAppletFactory::NotificationArea
+locked=true
+object-type=applet
+panel-right-stick=true
+position=116
+toplevel-id=bottom
+
+[Objects vscode]
+launcher-location=/usr/share/applications/visual-studio-code.desktop
+locked=true
+object-type=launcher
+panel-right-stick=false
+position=160
+toplevel-id=bottom
+
+[Objects clock]
+applet-iid=ClockAppletFactory::ClockApplet
+locked=true
+object-type=applet
+panel-right-stick=false
+position=1161
+toplevel-id=bottom
+
+[Objects clock/prefs]
+cities=[<location name="" city="Dhaka" timezone="Asia/Dhaka" latitude="23.850000" longitude="90.400002" code="VGZR" current="false"/>]
+custom-format=
+format=12-hour
+show-date=false
+show-temperature=false
+show-weather=false
+show-week-numbers=false
+
+[Objects netspeed]
+applet-iid=NetspeedAppletFactory::NetspeedApplet
+locked=true
+object-type=applet
+panel-right-stick=false
+position=1053
+toplevel-id=bottom
+
+[Objects netspeed/prefs]
+change-icon=false
+show-all-addresses=true
+show-bits=true
+show-icon=false
+show-quality-icon=false
+
+[Objects workspace-switcher]
+applet-iid=WnckletFactory::WorkspaceSwitcherApplet
+locked=true
+object-type=applet
+panel-right-stick=true
+position=53
+toplevel-id=bottom
+
+[Objects workspace-switcher/prefs]
+num-rows=2
