@@ -5,14 +5,14 @@ pkgdesc='VS Code themes and basic extension for developer'
 arch=('x86_64')
 url='https://github.vom/BCW52'
 depends=('code')
-source=("file:///home/bengal/Pictures/vscode.zip"
+source=("file:///home/harry/project/bengal-build/vscodestyle/vscode-oss.zip"
         "vscodestyle")
-sha256sums=('0017bfb8490f4563da0ede9c83b15b2ab6ca2dad7525586c00f8a49cea4ba99a'
-            '533aa9740f00021afd69874f2e0f6071563c726de34effc2ede01fc4fd08a169')
+sha256sums=('636529c1a8da76f9017439bb6fc3dccb6d52b6fc43b07e08b738ca80a8af0f7e'
+            '6255cabc8bc40210f261995b98553276f604081ee3312c299a3b29604f7767b2')
 package() {
 cd $srcdir
 install -dm755 "$pkgdir/usr/share/themes"
 install -dm755 "$pkgdir/usr/local/bin/"
-cp -r vscode  "$pkgdir/usr/share/themes"
+cp -r ./*  "$pkgdir/usr/share/themes"
 cp vscodestyle "$pkgdir/usr/local/bin/vscodestyle"
 }

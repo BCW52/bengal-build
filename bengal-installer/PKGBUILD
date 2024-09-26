@@ -1,61 +1,89 @@
 pkgname=bengal-installer
 pkgver=1
-pkgrel=4
-pkgdesc='BengalBoot and all others distro from Bengal OS Installer'
-arch=('i686' 'x86_64')
-license=(GPL)
+pkgrel=5
+pkgdesc='BengalBoot and all other distros from Bengal OS Installer'
+arch=('any')
+license=('GPL')
 url="https://github.com/BCW52"
-license=('LGPL')
-depends=('kconfig' 'kcoreaddons' 'kiconthemes' 'ki18n' 'kio' 'solid' 'yaml-cpp' 'kpmcore>=22.04.0' 'mkinitcpio-openswap'
-         'boost-libs' 'ckbcomp' 'hwinfo' 'qt5-svg' 'polkit-qt5' 'gtk-update-icon-cache' 'plasma-framework'
-         'qt5-xmlpatterns' 'squashfs-tools' 'libpwquality' 'appstream-qt' 'icu' 'python' 'qt5-webview')
-makedepends=('extra-cmake-modules' 'qt5-tools' 'qt5-translations' 'git' 'boost' 'kparts' 'kdbusaddons')
-backup=('usr/share/calamares/modules/bootloader.conf'
-        'usr/share/calamares/modules/displaymanager.conf'
-        'usr/share/calamares/modules/initcpio.conf'
-        'usr/share/calamares/modules/unpackfs.conf')
-
-source+=("file:///home/bengal/bengal-installer-1.4.tar.gz")
-sha256sums=('4cba0f39027bccbe723c5719c0d0ce13717a43ac362389924e24b281823f1583')
+depends=('kconfig' 'kcoreaddons' 'kiconthemes' 'ki18n' 'solid' 'yaml-cpp' 'kpmcore' 'boost-libs'
+         'ckbcomp' 'hwinfo' 'qt6-svg' 'polkit-qt6' 'squashfs-tools' 'libpwquality' 'python' 
+         'kpackage' 'kservice' 'kparts' 'python-setuptools' 'qt6-webengine' 'networkmanager' 
+         'upower' 'kwidgetsaddons' 'rsync' 'pybind11' 'cryptsetup' 'doxygen' 'dmidecode' 
+         'gptfdisk' 'qt6-tools' 'qt6-declarative')
+makedepends=('extra-cmake-modules' 'qt6-tools' 'qt6-translations' 'git' 'boost')
+source+=("file:///home/harry/project/bengal-installer.zip")
+sha256sums=('8d7b06c5d8d4ed9afb96770bbb914968a47bf5ee1c5c2de7c0b64246d27f6bf7')
 
 prepare() {
-
-    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}-${pkgver}.$pkgrel/CMakeLists.txt"
-    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${pkgname}-${pkgver}.$pkgrel/CMakeLists.txt"
-    cd ${srcdir}/$pkgname-${pkgver}.$pkgrel
+    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/$pkgname/CMakeLists.txt"
+    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/$pkgname/CMakeLists.txt"
+    cd ${srcdir}/$pkgname
     _patchver="$(cat CMakeLists.txt | grep -m3 -e CALAMARES_VERSION_PATCH | grep -o "[[:digit:]]*" | xargs)"
     sed -i -e "s|CALAMARES_VERSION_PATCH $_patchver|CALAMARES_VERSION_PATCH $_patchver-$pkgrel|g" CMakeLists.txt
     sed -i -e 's|"$@"|"-D6" "$@"|g' data/bengal_polkit
-}
 
+    # Apply additional patches if necessary
+    local src
+    for src in "${source[@]}"; do
+        src="${src%%::*}"
+        src="${src##*/}"
+        [[ $src = *.patch ]] || continue
+        msg2 "Applying patch: $src..."
+        patch -Np1 < "../$src"
+    done
+}
 
 build() {
-    cd ${srcdir}/$pkgname-${pkgver}.$pkgrel
+    cd ${srcdir}/$pkgname
     mkdir -p build
     cd build
-        cmake .. \
-              -DCMAKE_BUILD_TYPE=Debug \
-              -DCMAKE_INSTALL_PREFIX=/usr \
-              -DCMAKE_INSTALL_LIBDIR=lib \
-              -DWITH_KF5DBus=OFF \
-              -DBoost_NO_BOOST_CMAKE=ON \
-              -DSKIP_MODULES="initramfs initramfscfg \
-                              dummyprocess dummypython \
-                              dummycpp dummypythonqt \
-                              services-openrc"
-        make
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DWITH_QT6=ON \
+        -DBoost_NO_BOOST_CMAKE=ON \
+        -DSKIP_MODULES="dracut \
+          dracutlukscfg \
+          dummycpp \
+          dummyprocess \
+          dummypython \
+          dummypythonqt \
+          initramfs \
+          initramfscfg \
+          interactiveterminal \
+          keyboardq \
+          license \
+          localeq \
+          oemid \
+          packagechooserq \
+          partitionq \
+          services-openrc \
+          summaryq \
+          tracking \
+          usersq \
+          welcomeq \
+          zfs \
+          zfshostid"
+  make
 }
+
 package() {
-cd $srcdir/$pkgname-${pkgver}.$pkgrel/build
+    cd $srcdir/$pkgname/build
     make DESTDIR="$pkgdir" install
     install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/bengal-installer.svg"
     install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
     install -Dm755 "../data/bengal_polkit" "$pkgdir/usr/bin/bengal_polkit"
     install -Dm644 "../data/49-nopasswd-calamares.rules" "$pkgdir/etc/polkit-1/rules.d/49-nopasswd-calamares.rules"
     chmod 750      "$pkgdir"/etc/polkit-1/rules.d
-    mv "$pkgdir/usr/lib/calamares/modules/services-systemd" "$pkgdir/usr/lib/calamares/modules/services"
-    mv "$pkgdir/usr/share/calamares/modules/services-systemd.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
-    sed -i -e 's/-systemd//' "$pkgdir/usr/lib/calamares/modules/services/module.desc"
-    sed -i -e 's/-systemd//' "$pkgdir/usr/share/calamares/settings.conf"
 
+    # rename services-systemd back to services
+   # mv "$pkgdir/usr/lib/calamares/modules/services-systemd" "$pkgdir/usr/lib/calamares/modules/services"
+ #   mv "$pkgdir/usr/share/calamares/modules/services-systemd.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
+    # sed -i -e 's/-systemd//' "$pkgdir/usr/lib/calamares/modules/services/module.desc"
+  #  sed -i -e 's/-systemd//' "$pkgdir/usr/share/calamares/settings.conf"
+    rm "$pkgdir/usr/share/calamares/branding/bengal/conclusion.xcf"
+    rm "$pkgdir/usr/share/calamares/branding/bengal/Feature-1.xcf"
+    rm "$pkgdir/usr/share/calamares/branding/bengal/Feature-2.xcf"
+    rm "$pkgdir/usr/share/calamares/branding/bengal/welcome.xcf"
 }

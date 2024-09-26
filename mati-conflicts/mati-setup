@@ -1,4 +1,9 @@
 #!/bin/bash
-
 dconf load /org/mate/panel/ < /usr/share/layout/mati
+[ "$(id -u)" -eq 0 ] && /usr/local/bin/apply-root-settings
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+gsettings list-recursively org.mate.interface
+gsettings list-recursively org.mate.background
 rm ~/.config/autostart/mati-setup.desktop
+gsettings get org.mate.Marco.general theme
+gsettings list-recursively org.mate.Marco.general
