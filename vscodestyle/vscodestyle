@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if ! command -v code &> /dev/null
+then
+    echo "'code' is not installed. Installing it..."
+    
+    sudo pacman -S --noconfirm code
+    
+    if [[ $? -ne 0 ]]; then
+        echo "Failed to install 'code'. Exiting."
+        exit 1
+    fi
+    echo "'code' has been installed."
+else
+    echo "'code' is already installed."
+fi
+
+CONFIG_DIR="$HOME/.vscode-oss"
+
+if [ ! -d "$CONFIG_DIR" ]; then
+    echo "Creating the config directory at $CONFIG_DIR"
+    mkdir -p "$CONFIG_DIR"
+else
+    echo "Config directory $CONFIG_DIR already exists."
+fi
+
+THEME_DIR="/usr/share/themes/vscodestyle"
+
+if [ -d "$THEME_DIR" ]; then
+    echo "Copying theme files from $THEME_DIR to $CONFIG_DIR"
+    cp -r "$THEME_DIR"/* "$CONFIG_DIR"
+    echo "Theme files have been copied successfully."
+else
+    echo "Theme directory $THEME_DIR does not exist. Please ensure it is available."
+    exit 1
+fi
+
+echo "VSCode setup completed successfully."
