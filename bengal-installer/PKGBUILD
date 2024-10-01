@@ -11,13 +11,13 @@ depends=('kconfig' 'kcoreaddons' 'kiconthemes' 'ki18n' 'solid' 'yaml-cpp' 'kpmco
          'upower' 'kwidgetsaddons' 'rsync' 'pybind11' 'cryptsetup' 'doxygen' 'dmidecode' 
          'gptfdisk' 'qt6-tools' 'qt6-declarative')
 makedepends=('extra-cmake-modules' 'qt6-tools' 'qt6-translations' 'git' 'boost')
-source+=("file:///home/harry/project/bengal-installer.zip")
-sha256sums=('8d7b06c5d8d4ed9afb96770bbb914968a47bf5ee1c5c2de7c0b64246d27f6bf7')
+source+=("https://github.com/BCW52/bengal-installer/archive/refs/tags/v1.5.zip")
+sha256sums=('7395b0956d810f9493f917e5bbc723172b352e4a5d816cece3e8c74240d75b8e')
 
 prepare() {
-    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/$pkgname/CMakeLists.txt"
-    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/$pkgname/CMakeLists.txt"
-    cd ${srcdir}/$pkgname
+    sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "${srcdir}/$pkgname-$pkgver.$pkgrel/CMakeLists.txt"
+    sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "${srcdir}/$pkgname-$pkgver.$pkgrel/CMakeLists.txt"
+    cd ${srcdir}/$pkgname-$pkgver.$pkgrel
     _patchver="$(cat CMakeLists.txt | grep -m3 -e CALAMARES_VERSION_PATCH | grep -o "[[:digit:]]*" | xargs)"
     sed -i -e "s|CALAMARES_VERSION_PATCH $_patchver|CALAMARES_VERSION_PATCH $_patchver-$pkgrel|g" CMakeLists.txt
     sed -i -e 's|"$@"|"-D6" "$@"|g' data/bengal_polkit
@@ -34,7 +34,7 @@ prepare() {
 }
 
 build() {
-    cd ${srcdir}/$pkgname
+    cd ${srcdir}/$pkgname-$pkgver.$pkgrel
     mkdir -p build
     cd build
     cmake .. \
@@ -69,7 +69,7 @@ build() {
 }
 
 package() {
-    cd $srcdir/$pkgname/build
+    cd ${srcdir}/$pkgname-$pkgver.$pkgrel/build
     make DESTDIR="$pkgdir" install
     install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/bengal-installer.svg"
     install -Dm644 "../data/bengal-installer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"

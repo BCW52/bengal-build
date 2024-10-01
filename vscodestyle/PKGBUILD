@@ -1,13 +1,13 @@
 pkgname=vscodestyle
 pkgver=1
-pkgrel=1
+pkgrel=2
 pkgdesc='VS Code themes and basic extension for developer'
 arch=('x86_64')
 url='https://github.vom/BCW52'
 depends=('code')
-source=("file:///home/harry/project/bengal-build/vscodestyle/vscode-oss.zip"
+source=("https://github.com/BCW52/vscodestyle/archive/refs/tags/v1.2.zip"
         "vscodestyle")
-sha256sums=('636529c1a8da76f9017439bb6fc3dccb6d52b6fc43b07e08b738ca80a8af0f7e'
+sha256sums=('0faed777e7347d1c2777ded095e267101c70568b2ab0e52f85052f10209903f1'
             '6255cabc8bc40210f261995b98553276f604081ee3312c299a3b29604f7767b2')
 package() {
 cd $srcdir
