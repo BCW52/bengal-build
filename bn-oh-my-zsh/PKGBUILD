@@ -1,0 +1,31 @@
+pkgname=bn-oh-my-zsh
+pkgver=1
+pkgrel=2
+pkgdesc="A community-driven framework for managing your zsh configuration. Includes 180+ optional plugins and over 120 themes to spice up your morning, and an auto-update tool so that makes it easy to keep up with the latest updates from the community"
+arch=('any')
+url='https://github.com/BCW52'
+license=('MIT')
+depends=('zsh')
+makedepends=('git'
+             'chroma'
+             'notify-send.sh'
+             'fzf')
+conflicts=('oh-my-zsh'
+           'oh-my-zsh-git')
+source=("git+$url/${pkgname}"
+        '0001-zshrc.patch')
+sha256sums=('SKIP'
+            '83a3733eb5408e9ff7d87c68659c8a2c481e3c5e607ce04c071ab638a1f7e9f3')
+
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  cp "templates/zshrc.zsh-template" "zshrc"
+  patch -p1 < "${srcdir}/0001-zshrc.patch"
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+
+  mkdir -p "${pkgdir}/usr/share/oh-my-zsh"
+  cp -r * "${pkgdir}/usr/share/oh-my-zsh/"
+}
