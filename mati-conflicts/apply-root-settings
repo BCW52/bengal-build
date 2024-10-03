@@ -1,5 +1,0 @@
-#!/bin/bash
-dconf load /org/mate/panel/ < /usr/share/layout/mati
-
-dconf write /org/mate/desktop/background/picture-filename "'/usr/share/backgrounds/mate/desktop/Astronaut.jpg'"
-dconf write /org/mate/desktop/background/picture-options "'zoom'"
