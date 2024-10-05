@@ -15,6 +15,7 @@ optdepends=('mozo: for menu edition'
 options=('!libtool' '!emptydirs')
 provides=('brisk-menu')
 conflicts=('brisk-menu')
+groups=('mati')
 source=(git+https://github.com/getsolus/brisk-menu.git)
 sha1sums=('SKIP')
 

@@ -17,6 +17,7 @@ optdepends=('brisk-menu: for Manjaro panel layout'
             'tilda: to enable pull-down terminal'
             'topmenu-gtk: for Mutiny panel layout'
             'vala-panel-appmenu-mate: for Mutiny,Cupertino')
+groups=('mati')
 source=("https://github.com/ubuntu-mate/mate-tweak/archive/refs/tags/22.10.0.tar.gz")
 sha256sums=('c33c092b0151b50d8a5706825f1bcef57f1738f8f5cf22af49c11f45bc14e84a')
 

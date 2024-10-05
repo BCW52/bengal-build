@@ -3,7 +3,7 @@
 # Contributor: Martin Wimpress <code@flexion.org>
 
 pkgbase=caja-mati-extensions
-pkgname=(caja-mati-extensions-common caja-mati-image-converter caja-mati-open-terminal caja-mati-sendto caja-mati-wallpaper caja-mati-xattr-tags)
+pkgname=(caja-mati-extensions caja-mati-image-converter caja-mati-open-terminal caja-mati-sendto caja-mati-wallpaper caja-mati-xattr-tags)
 pkgver=1
 pkgrel=1
 pkgdesc="caja-mati extensions"
@@ -26,7 +26,6 @@ cd caja-extensions-1.26.1
     ./configure \
         --prefix=/usr \
         --disable-upnp \
-        --disable-gksu
 
     #https://bugzilla.gnome.org/show_bug.cgi?id=656231
     sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
@@ -34,7 +33,7 @@ cd caja-extensions-1.26.1
     make
 }
 
-package_caja-mati-extensions-common() {
+package_caja-mati-extensions() {
     pkgdesc="caja-mati extensions (common files)"
     depends=()
 
@@ -44,8 +43,8 @@ cd caja-extensions-1.26.1
 
 package_caja-mati-image-converter() {
     pkgdesc="A caja-mati extension for simple image conversions"
-    depends=('caja-mati' 'caja-mati-extensions-common' 'imagemagick')
-    groups=('mate-extra')
+    depends=('caja-mati' 'caja-mati-extensions' 'imagemagick')
+    groups=('mati')
     conflicts=('caja-mati-image-converter-gtk3')
     replaces=('caja-mati-image-converter-gtk3')
 
@@ -55,8 +54,8 @@ cd caja-extensions-1.26.1
 
 package_caja-mati-open-terminal() {
     pkgdesc="A caja-mati extension for opening terminals in arbitrary local paths"
-    depends=('caja-mati' 'caja-mati-extensions-common')
-    groups=('mate-extra')
+    depends=('caja-mati' 'caja-mati-extensions')
+    groups=('mati')
     conflicts=('caja-mati-open-terminal-gtk3')
     replaces=('caja-mati-open-terminal-gtk3')
 
@@ -66,8 +65,8 @@ package_caja-mati-open-terminal() {
 
 package_caja-mati-sendto() {
     pkgdesc="A caja-mati extension for sending files"
-    depends=('caja-mati' 'caja-mati-extensions-common' 'dbus-glib')
-    groups=('mate-extra')
+    depends=('caja-mati' 'caja-mati-extensions' 'dbus-glib')
+    groups=('mati')
     optdepends=('pidgin: Support for sending to instant messaging networks.'
                 'gajim: Support for sending to XMPP.')
     conflicts=('caja-mati-sendto-gtk3')
@@ -79,8 +78,8 @@ cd caja-extensions-1.26.1
 
 package_caja-mati-wallpaper() {
     pkgdesc="A caja-mati extension to quickly set wallpaper"
-    depends=('caja-mati' 'caja-mati-extensions-common')
-    groups=('mate-extra')
+    depends=('caja-mati' 'caja-mati-extensions')
+    groups=('mati')
     conflicts=('caja-mati-wallpaper-gtk3')
     replaces=('caja-mati-wallpaper-gtk3')
     
@@ -90,8 +89,8 @@ cd caja-extensions-1.26.1
 
 package_caja-mati-xattr-tags() {
     pkgdesc="A caja-mati extension to see tags stored on xattrs"
-    depends=('caja-mati' 'caja-mati-extensions-common')
-    groups=('mate-extra')
+    depends=('caja-mati' 'caja-mati-extensions')
+    groups=('mati')
     
 cd caja-extensions-1.26.1
     make -C xattr-tags DESTDIR="${pkgdir}" install
