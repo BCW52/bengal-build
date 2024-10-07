@@ -10,9 +10,8 @@ source=("https://github.com/BCW52/vscodestyle/archive/refs/tags/v1.2.zip"
 sha256sums=('0faed777e7347d1c2777ded095e267101c70568b2ab0e52f85052f10209903f1'
             '6255cabc8bc40210f261995b98553276f604081ee3312c299a3b29604f7767b2')
 package() {
-cd $srcdir
-install -dm755 "$pkgdir/usr/share/themes"
-install -dm755 "$pkgdir/usr/local/bin/"
-cp -r ./*  "$pkgdir/usr/share/themes"
-cp vscodestyle "$pkgdir/usr/local/bin/vscodestyle"
+    cd $pkgname-$pkgver.$pkgrel
+    mkdir -p "$pkgdir/usr/share/themes/"
+    install -Dm755 "$srcdir/vscodestyle" "$pkgdir/usr/bin/vscodestyle" 
+    cp -r "$srcdir/$pkgname-$pkgver.$pkgrel" "$pkgdir/usr/share/themes/vscodestyle"
 }
